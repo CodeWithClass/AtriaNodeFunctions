@@ -7,7 +7,7 @@ const path = require("path");
 const basepyUrl = path.join(__dirname, "./base.py");
 const formatMLData = require("./formatData");
 
-ml.get("/api/ml", (req, res) => {
+ml.get("/api/fitbit/ml", (req, res) => {
 	let runPy = new Promise((success, nosuccess) => {
 		const { spawn } = require("child_process");
 		const pyprog = spawn("python", [basepyUrl]);

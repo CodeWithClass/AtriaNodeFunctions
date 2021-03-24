@@ -8,22 +8,16 @@
 		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
 		"rewrites": [
 			{
-				"source": "/api/fitbit",
-				"function": "fitbit",
-
-				"destination": "/index.html"
+				"source": "/api/fitbit/**",
+				"function": "fitbit"
 			},
 			{
-				"source": "/api/withings",
-				"function": "withings",
-
-				"destination": "/index.html"
+				"source": "/api/withings/**",
+				"function": "withings"
 			},
 			{
-				"source": "/api/ml",
-				"function": "ml",
-
-				"destination": "/index.html"
+				"source": "/api/ml/**",
+				"function": "ml"
 			}
 		]
 	}

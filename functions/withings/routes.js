@@ -7,13 +7,13 @@ const withings = express();
 withings.use(express.json());
 var path = require("path");
 
-withings.get("/api/withings", (req, res) => {
+withings.get("/api/fitbit", (req, res) => {
 	res.json({
 		message: "welcome",
 	});
 });
 
-withings.get("/api/withings/auth", (req, res) => {
+withings.get("/api/fitbit/auth", (req, res) => {
 	let AccessCode = req.query.code;
 	let uid = req.query.state;
 	if (AccessCode) {
@@ -39,7 +39,7 @@ withings.get("/api/withings/auth", (req, res) => {
 	}
 });
 
-withings.get("/api/withings/refresh_token", (req, res) => {
+withings.get("/api/fitbit/refresh_token", (req, res) => {
 	let refToken = req.query.RefreshToken;
 	let uid = req.query.Uid;
 	withingsAuth
@@ -55,7 +55,7 @@ withings.get("/api/withings/refresh_token", (req, res) => {
 		});
 });
 
-withings.get("/api/withings/fetchdata", (req, res) => {
+withings.get("/api/fitbit/fetchdata", (req, res) => {
 	let accesstoken = req.query.access_token;
 	let uid = req.query.Uid;
 	let date = req.query.date;

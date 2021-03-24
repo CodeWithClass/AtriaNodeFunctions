@@ -6,6 +6,10 @@ const fitbit = express();
 fitbit.use(express.json());
 var path = require("path");
 
+fitbit.get("/api/fitbit/hi", (req, res) => {
+	res.json({ res: "hi" });
+});
+
 fitbit.get("/api/fitbit/auth", (req, res) => {
 	let AccessCode = req.query.code;
 	let uid = req.query.state;

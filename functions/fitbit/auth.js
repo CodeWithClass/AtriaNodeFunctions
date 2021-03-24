@@ -3,12 +3,9 @@ const rp = require("request-promise");
 const fetchdata = require("./fetchdata");
 const db = firebase.database();
 const client_id = "22DKK3";
-// const client_secret = "c50cacfa8b8cab58aac60e02c6d0fc16"
-// const base64 = "MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
 const redirect_uri = "https://atria.coach/api/fitbit/auth";
 const scope =
 	"activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight";
-// const expires_in = "604800"
 const response_type = "code";
 const TokenURL = "https://api.fitbit.com/oauth2/token";
 
