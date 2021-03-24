@@ -8,6 +8,7 @@ const scope =
 	"activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight";
 const response_type = "code";
 const TokenURL = "https://api.fitbit.com/oauth2/token";
+const env = require("../env.json");
 
 const AccessToken = (fitbitCode, firebaseUID) => {
 	const requestBody = {
@@ -21,8 +22,7 @@ const AccessToken = (fitbitCode, firebaseUID) => {
 	const requestData = {
 		method: "POST",
 		headers: {
-			Authorization:
-				"Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2",
+			Authorization: env.fitbit_Authorization,
 		},
 		uri: TokenURL,
 		form: requestBody,
@@ -49,8 +49,7 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 	const requestData = {
 		method: "POST",
 		headers: {
-			Authorization:
-				"Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2",
+			Authorization: env.fitbit_Authorization,
 		},
 		uri: TokenURL,
 		form: requestBody,

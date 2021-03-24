@@ -5,9 +5,10 @@ const express = require("express");
 const fitbit = express();
 fitbit.use(express.json());
 var path = require("path");
+const env = require("../env.json");
 
 fitbit.get("/api/fitbit/hi", (req, res) => {
-	res.json({ res: "hi" });
+	res.json({ res: env.fitbit_Authorization });
 });
 
 fitbit.get("/api/fitbit/auth", (req, res) => {
