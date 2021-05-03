@@ -18,6 +18,10 @@
 			{
 				"source": "/api/ml/**",
 				"function": "ml"
+			},
+			{
+				"source": "/api/recommendation/**",
+				"function": "recommendation"
 			}
 		]
 	}

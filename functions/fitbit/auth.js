@@ -1,14 +1,16 @@
-const firebase = require("firebase-admin");
 const rp = require("request-promise");
-const fetchdata = require("./fetchdata");
-const db = firebase.database();
+const { fetchData } = require("./fetchdata");
+const { AddSubscriber } = require("./subscribe");
+const { WriteToDb, RemoveFromDb } = require("../helpers/db-helpers");
+const env = require("../env.json");
+
 const client_id = "22DKK3";
 const redirect_uri = "https://atria.coach/api/fitbit/auth";
 const scope =
 	"activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight";
 const response_type = "code";
-const TokenURL = "https://api.fitbit.com/oauth2/token";
-const env = require("../env.json");
+const getTokenURL = "https://api.fitbit.com/oauth2/token";
+const revokeTokenURL = "https://api.fitbit.com/oauth2/revoke";
 
 const AccessToken = (fitbitCode, firebaseUID) => {
 	const requestBody = {
@@ -24,23 +26,39 @@ const AccessToken = (fitbitCode, firebaseUID) => {
 		headers: {
 			Authorization: env.fitbit_Authorization,
 		},
-		uri: TokenURL,
+		uri: getTokenURL,
 		form: requestBody,
 		json: true, // Automatically stringifies the body to JSON
 	};
 
 	return rp(requestData)
-		.then((res) => {
-			return WriteToDb(firebaseUID, res);
+		.then((authRes) => {
+			//after accesstoken is received subscribe for updates
+			return AddSubscriber(firebaseUID, authRes.access_token)
+				.then((subRes) => {
+					WriteToDb({
+						firebaseUID,
+						data: true,
+						key: "fitbitAuth",
+						path: "user",
+					});
+
+					return WriteToDb({
+						firebaseUID,
+						data: { ...authRes, ...subRes },
+						key: "fitbitAuth",
+					});
+				})
+				.catch((err) => console.log("subscribe err: ", err));
 		})
+
 		.catch((err) => {
-			// eslint-disable-next-line no-console
 			console.log(err);
 			return err;
 		});
 };
 
-const RefreshToken = (refresh_token, firebaseUID) => {
+const RefreshAndFetch = (firebaseUID, refresh_token, category, date) => {
 	const requestBody = {
 		refresh_token,
 		grant_type: "refresh_token",
@@ -51,30 +69,48 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 		headers: {
 			Authorization: env.fitbit_Authorization,
 		},
-		uri: TokenURL,
+		uri: getTokenURL,
 		form: requestBody,
 		json: true, // Automatically stringifies the body to JSON
 	};
 
 	return rp(requestData)
 		.then((res) => {
-			fetchdata.makeCall(res.user_id, res.access_token, firebaseUID);
-			WriteToDb(firebaseUID, res);
+			WriteToDb({ firebaseUID, data: res, key: "fitbitAuth" });
+			return fetchData(
+				res.user_id,
+				res.access_token,
+				firebaseUID,
+				category,
+				date
+			);
 		})
 		.catch((err) => {
-			return err.response;
+			return err;
 		});
 };
 
-const WriteToDb = (firebaseUID, AuthObj) => {
-	return new Promise((resolve, reject) => {
-		let user = db.ref("users/" + firebaseUID);
-		user.update({
-			fitbitAuth: AuthObj,
+const RevokeToken = (token, firebaseUID) => {
+	const requestBody = {
+		token,
+	};
+	const requestData = {
+		method: "POST",
+		headers: {
+			Authorization: env.fitbit_Authorization,
+		},
+		uri: revokeTokenURL,
+		form: requestBody,
+		json: true, // Automatically stringifies the body to JSON
+	};
+
+	return rp(requestData)
+		.then(() => {
+			return RemoveFromDb({ firebaseUID, toBeRemoved: "fitbitAuth" });
+		})
+		.catch((err) => {
+			return err;
 		});
-		resolve({ fbstatus: 200, data: AuthObj });
-		reject({ fbstatus: 401, data: "unknown err" });
-	});
 };
 
-module.exports = { AccessToken, RefreshToken };
+module.exports = { AccessToken, RefreshAndFetch, RevokeToken };

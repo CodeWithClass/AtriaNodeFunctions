@@ -1,6 +1,5 @@
-const firebase = require("firebase-admin");
 const rp = require("request-promise");
-const db = firebase.database();
+const { WriteToDb } = require("../helpers/db-helpers");
 const client_id =
 	"5d81605593c6c4e8e1c3871f69fa3ed026659338266b7e27ba07a352bfb6d7fb";
 const client_secret =
@@ -26,7 +25,8 @@ const AccessToken = (withingscode, firebaseUID) => {
 
 	return rp(requestData)
 		.then((resBody) => {
-			return WriteToDb(firebaseUID, resBody);
+			WriteToDb({ firebaseUID, data: true, key: "withingsAuth", path: "user" });
+			return WriteToDb({ firebaseUID, data: resBody, key: "withingsAuth" });
 		})
 		.catch((err) => {
 			return console.log(err);
@@ -50,20 +50,11 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 
 	return rp(requestData)
 		.then((res) => {
-			return WriteToDb(firebaseUID, res);
+			return WriteToDb({ firebaseUID, data: res, key: "withingsAuth" });
 		})
 		.catch((err) => {
 			return err.response;
 		});
 };
 
-const WriteToDb = (firebaseUID, AuthObj) => {
-	return new Promise((resolve) => {
-		let user = db.ref("users/" + firebaseUID);
-		user.update({
-			withingsAuth: AuthObj,
-		});
-		resolve({ fbstatus: 200, data: AuthObj });
-	});
-};
 module.exports = { AccessToken, RefreshToken };

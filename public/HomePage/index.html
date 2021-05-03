@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Atria</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="" name="keywords" />
+  <meta content="" name="description" />
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon" />
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Oswald:400,300,700|Lato:400,700" rel="stylesheet" />
+
+  <!-- Bootstrap CSS File -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style.css" rel="stylesheet" />
+
+
+
+
+</head>
+
+<body>
+  <!-- Menu -->
+  <!-- <nav class="menu" id="theMenu">
+    <div class="menu-wrap">
+      <h1 class="logo"><a href="#home" class="smoothscroll">Studio</a></h1>
+      <i class="fa fa-times menu-close"></i>
+      <a href="#home" class="smoothscroll">Home</a>
+      <a href="#about" class="smoothscroll">About</a>
+      <a href="#portfolio" class="smoothscroll">Portfolio</a>
+      <a href="#services" class="smoothscroll">Services</a>
+      <a href="#contact" class="smoothscroll">Contact</a>
+      <a href="#"><i class="fa fa-facebook"></i></a>
+      <a href="#"><i class="fa fa-twitter"></i></a>
+      <a href="#"><i class="fa fa-dribbble"></i></a>
+      <a href="#"><i class="fa fa-envelope"></i></a>
+    </div>
+
+  <div id="menuToggle"><i class="fa fa-bars"></i></div>
+  </nav> -->
+
+  <section id="home" name="home"></section>
+  <div id="headerwrap">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Atria</h1>
+          <h4>A healthier way.</h4>
+          <img src="img/playstore.png" href="#" class="playstore" />
+        </div>
+        <div class="col-md-6">
+          <img src="./img/s9.png" class="s9" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="contactwrap">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <p>Contact me with any issues, bugs or suggestions about Atria</p>
+          <p>
+            <small>Bridgetown,<br />
+              Barbados<br />
+              dominiccevans@gmail.com</small>
+          </p>
+        </div>
+
+        <div class="col-lg-6">
+
+
+          <form onsubmit="sendMsg()" id="contact-form" class="form form-contact" name="form-contact">
+            <div class="bg-contrast p-4 rounded">
+              <div class="form-group"><label for="contact_email" class="bold mb-0">Email
+                  address</label>
+                <input type="email" name="email" id="contact_email" class="form-control bg-contrast"
+                  placeholder="Valid Email" required>
+              </div>
+              <div class="form-group"><label for="contact_email" class="bold">Subject</label> <input type="text"
+                  name="subject" id="contact_subject" class="form-control bg-contrast" placeholder="Subject" required>
+              </div>
+              <div class="form-group"><label for="contact_email" class="bold">Message</label>
+                <textarea name="message" id="contact_message" class="form-control bg-contrast"
+                  placeholder="What do you want to let us know?" rows="8" required></textarea>
+              </div>
+              <div class="form-group d-flex justify-content-end mt-4">
+                <button id="contact-submit" type="button" onclick="sendMsg()" class="btn primary-btn btn-rounded">Send
+                  Message</button>
+              </div>
+            </div>
+
+          </form>
+
+          <div id="response-message" class="mx-auto p-5 d-none">
+            <div class="section-heading">
+              <p class="font-md m-0">Thank you!</p>
+              <p class="response">Your message has been sent, we will contact you as soon as possible.</p>
+            </div>
+          </div>
+
+          <div id="loading-message" class="mx-auto p-5 d-none">
+            <div class="section-heading"></i>
+              <p class="font-md m-0">Sending...</p>
+              <p class="response">Just a momment.</p>
+
+            </div>
+          </div>
+
+          <div id="error-message" class="mx-auto p-5 d-none">
+            <div class="section-heading"></i>
+              <p class="response text-danger">A strange error has been encountered. Try again or email us
+                directly at dominiccevans@gmail.com</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- /container -->
+  </div>
+
+  <div id="copyrights">
+    <div class="container">
+      <p>&copy; All Rights Reserved</p>
+      <div class="credits">
+        Created by
+        <a href="https://coderehack.com/">CodeRehack</a>
+      </div>
+    </div>
+  </div>
+  <!-- / copyrights -->
+
+  <!-- JavaScript Libraries -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+
+  <!-- Javascript Files -->
+  <script src="js/main.js"></script>
+  <script src="js/contact_form.js"></script>
+
+</body>
+
+</html>

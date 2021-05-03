@@ -1,10 +1,11 @@
-const firebase = require("firebase-admin");
-var rp = require("request-promise");
+const rp = require("request-promise");
+const { WriteToDb, ReadFromDb } = require("../helpers/db-helpers");
+const { unixToDetailed } = require("../helpers/formating");
+const _ = require("lodash");
 
-const db = firebase.database();
 const dataURL = "https://wbsapi.withings.net/measure";
 
-var getBPData = (accesstoken, firebaseUID, date) => {
+const getBPData = (accesstoken, firebaseUID, date) => {
 	const params = {
 		action: "getmeas",
 		access_token: accesstoken,
@@ -19,7 +20,8 @@ var getBPData = (accesstoken, firebaseUID, date) => {
 
 	return rp(requestData)
 		.then((res) => {
-			if (res.status == 401) return res;
+			console.log(_.get(res, "body", 0));
+			if (_.get(res, "status", -1) == 401) return res;
 			else return ProcessData(firebaseUID, date, res.body || res);
 		})
 		.catch((err) => {
@@ -27,23 +29,13 @@ var getBPData = (accesstoken, firebaseUID, date) => {
 		});
 };
 
-var ProcessData = (firebaseUID, date, dataObj = {}) => {
+const ProcessData = (firebaseUID, date, dataObj = {}) => {
+	//fix this
 	if (!dataObj.measuregrps) return dataObj;
 
 	let formattedData = dataObj.measuregrps.map((d) => {
-		let fullDate = new Date(d.created * 1000); //convert from unix format to JS
-		let formatedDate =
-			fullDate.getFullYear() +
-			"-" +
-			(fullDate.getMonth() + 1) +
-			"-" +
-			fullDate.getDate() +
-			" " +
-			fullDate.getHours() +
-			":" +
-			fullDate.getMinutes() +
-			":" +
-			fullDate.getSeconds();
+		const pid = d.grpid || _.random(1221226674, 8321226674);
+		const detailedDate = unixToDetailed(d.date);
 
 		let diastolic = d.measures[0] ? d.measures[0].value : 0;
 		while (diastolic > 300) diastolic /= 10; //manual update adds extra 0s
@@ -58,7 +50,8 @@ var ProcessData = (firebaseUID, date, dataObj = {}) => {
 
 		return {
 			measurement: {
-				date: formatedDate,
+				pid,
+				date: detailedDate,
 				diastolic,
 				systolic,
 				hr,
@@ -66,19 +59,34 @@ var ProcessData = (firebaseUID, date, dataObj = {}) => {
 		};
 	});
 
-	let filteredData = formattedData.filter((element) => element);
-
-	return WriteToDb(firebaseUID, date, filteredData);
+	const filteredData = formattedData.filter((element) => element);
+	return finalizeData({ firebaseUID, filteredData, date });
 };
-var WriteToDb = (firebaseUID, date, bpData = {}) => {
-	return new Promise((resolve) => {
-		let user = db.ref(
-			"users/" + firebaseUID + "/dailyStats/" + date.toString()
-		);
-		user.update({
-			bp: bpData,
+
+const finalizeData = async (params) => {
+	const { firebaseUID, filteredData, date } = params;
+	const path = "dailyStats/" + date.toString();
+	const dataSnapshot = await ReadFromDb({ firebaseUID, path });
+
+	let dataFromDb = dataSnapshot.val().bp || [];
+
+	if (!dataFromDb || Object.keys(dataFromDb).length === 0) {
+		return WriteToDb({
+			firebaseUID,
+			data: filteredData,
+			key: "bp",
+			path,
 		});
-		resolve(bpData);
+	}
+
+	let concatArr = _.concat(dataFromDb, filteredData);
+	let finalData = _.uniqBy(concatArr, "measurement.pid");
+	return WriteToDb({
+		firebaseUID,
+		data: finalData,
+		key: "bp",
+		path,
 	});
 };
+
 module.exports = { getBPData };

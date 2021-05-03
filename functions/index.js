@@ -9,7 +9,9 @@ firebase.initializeApp({
 const { fitbit } = require("./fitbit/routes.js");
 const { withings } = require("./withings/routes.js");
 const { ml } = require("./machine_learning/routes.js");
+const { recommendation } = require("./recommendations/routes.js");
 
 exports.fitbit = fitbit;
 exports.withings = withings;
 exports.ml = ml;
+exports.recommendation = recommendation;
