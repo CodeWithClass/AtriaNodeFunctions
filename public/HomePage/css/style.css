@@ -426,6 +426,7 @@ h6 {
 
 /* Contact Wrap */
 #contactwrap {
+	min-height: 50vh;
 	background-color: #2f2f2f;
 	margin-top: 0px;
 	padding-top: 25px;
@@ -598,6 +599,6 @@ h6 {
 }
 
 .primary-btn {
-	color: #222;
-	background-color: #ff8163;
+	color: #fff;
+	background-color: #f85c37;
 }
